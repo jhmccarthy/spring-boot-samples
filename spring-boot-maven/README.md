@@ -6,6 +6,7 @@ This sample application is based on a Spring Boot guide that walks you through t
 
 https://spring.io/guides/gs/spring-boot-docker/
 
+This sample will create a simple web application using a `@RestController` to display a message.
 
 ## Build the Project via command line
 ```shell
@@ -15,7 +16,7 @@ mvn clean install
 
 ## Create the sample application
 ```shell
-mvn package && java -jar target/sample-spring-boot-docker-0.1.0.jar 
+mvn package && java -jar target/sample-spring-boot.jar 
 ```
 
 Go to http://localhost:8080 to see your "Greetings from Spring Boot!" message.
