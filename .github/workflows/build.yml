@@ -23,6 +23,8 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+    - name: cd to spring-boot-maven
+      run: cd spring-boot-maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
