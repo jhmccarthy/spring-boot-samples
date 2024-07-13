@@ -1,32 +1,30 @@
 package demo.controller;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
 import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HelloControllerIT {
-    @LocalServerPort
-    private int port;
-
+    private final TestRestTemplate template;
+    @LocalServerPort private int port;
     private URL base;
 
     @Autowired
-    private TestRestTemplate template;
+    public HelloControllerIT(TestRestTemplate template) {
+        this.template = template;
+    }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         this.base = URI.create("http://localhost:" + port + "/").toURL();
     }
@@ -34,6 +32,6 @@ public class HelloControllerIT {
     @Test
     public void getHello() {
         ResponseEntity<String> response = template.getForEntity(base.toString(), String.class);
-        assertEquals(response.getBody(), "Greetings from Spring Boot!");
+        assertEquals("Greetings from Spring Boot!", response.getBody());
     }
 }
