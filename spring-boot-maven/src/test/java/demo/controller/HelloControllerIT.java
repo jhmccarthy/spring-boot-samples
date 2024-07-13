@@ -14,7 +14,7 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class HelloControllerIT {
+class HelloControllerIT {
     private final TestRestTemplate template;
     @LocalServerPort private int port;
     private URL base;
@@ -30,7 +30,7 @@ public class HelloControllerIT {
     }
 
     @Test
-    public void getHello() {
+    void getHello() {
         ResponseEntity<String> response = template.getForEntity(base.toString(), String.class);
         assertEquals("Greetings from Spring Boot!", response.getBody());
     }
