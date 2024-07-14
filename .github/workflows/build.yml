@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: springBoot.jar
-          file: ${{github.workspace}}/target/springBoot.jar
+          path: ./spring-boot-maven/target/springBoot.jar
 
   dependency-check:
     needs: build
