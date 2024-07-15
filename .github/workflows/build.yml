@@ -37,7 +37,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: ./spring-boot-maven
-        run: mvn --file pom.xml clean install
+        run: mvn --batch-mode clean install
 
       - name: Upload jar artifacts
         uses: actions/upload-artifact@master
@@ -113,7 +113,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./spring-boot-maven
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jhmccarthy_spring-boot-samples
+        run: mvn --batch-mode  verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jhmccarthy_spring-boot-samples
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #    - name: Update dependency graph
