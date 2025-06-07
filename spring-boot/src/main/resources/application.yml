@@ -1,0 +1,109 @@
+spring:
+  application:
+    name: rugby
+  profiles: default
+  main.banner-mode: off
+
+  # JPA configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+
+#  jpa:
+#    # The PostgreSQL DB is the default
+#    database: default
+#    show-sql: false
+#    # Avoid a warning message in the logs when the spring-boot application starts (for the PostgreSQL DB)
+#    properties:
+#      hibernate.jdbc.lob.non_contextual_creation: true
+#      hibernate.generate_statistics: false
+#  datasource:
+#    url: jdbc:postgresql://cargo-pg-dev01.sat.cbp.dhs.gov:7999/appmon_db?currentSchema=appmon&ssl=true&sslmode=require&sslcert=/data/ace/certs/postgres/client_appmon_app_dev.crt&sslkey=/data/ace/certs/postgres/client_appmon_app_dev.pk8&sslrootcert=/data/ace/certs/postgres/ca_dev.crt
+#    platform: postgres
+#    driver-class-name: org.postgresql.Driver
+#    username: ${POSTGRESQL_USERNAME}
+#    password: "${POSTGRESQL_PASSWORD}"
+#    hikari:
+#      data-source-properties: stringtype=unspecified
+#  oracle-datasource:
+#    url: jdbc:oracle:thin:@(DESCRIPTION=(CONNECT_TIMEOUT=5)(RETRY_COUNT=1)(ADDRESS_LIST=(FAILOVER=ON)(LOAD_BALANCE=OFF)(ADDRESS=(PROTOCOL=tcp)(HOST=oracle.primary.url)(PORT=1521))(ADDRESS=(PROTOCOL=tcp)(HOST=oracle.backup.url)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=service)))
+#    username: ${ORACLE_USERNAME}
+#    password: ${ORACLE_PASSWORD}
+#    driver-class-name: oracle.jdbc.xa.client.OracleXADataSource
+#    hikari:
+#      connection-timeout: 60000
+#      maximum-pool-size: 15
+#  db2-datasource:
+#    url: jdbc:db2://db2.server.url:61020/odsdb1
+#    username: ${DB2_USERNAME}
+#    password: ${DB2_PASSWORD}
+#    driver-class-name: com.ibm.db2.jcc.DB2Driver
+#    hikari:
+#      connection-timeout: 60000
+#      maximum-pool-size: 15
+
+  # H2 Console - https://localhost:8443/h2-console
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings.trace: false
+      settings.web-allow-others: false
+
+server:
+  servlet.context-path: /
+  use-forward-headers: true
+  tomcat:
+    remote-ip-header: X-Forwarded-For
+    protocol-header: X-Forwarded-Proto
+    port-header: X-Forwarded-Port
+  error.include-stacktrace: always
+  port: 8443
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:keystore/mccarthy.p12
+    key-store-password: changeit
+    key-alias: mccarthy
+    enabled: true
+
+# Actuator configuration
+management:
+  endpoints:
+    web.exposure.include: "*"
+  endpoint:
+    health.show-details: always
+    metrics.enabled: true
+    metrics.prometheus.enabled: true
+  security.enabled: true
+
+# Actuator info endpoint configuration (https://<server>/actuator/info)
+info:
+  app.name: "@project.name@"
+  app.version: "@project.version@"
+  app.java.version: "@java.version@"
+
+# Logging
+logging:
+  level:
+    demo: DEBUG
+    org.springframework: INFO
+    org.springframework.web: INFO
+
+# Application
+rugby:
+  news:
+    rss-url: https://www.rnz.co.nz/rss/sport.xml
+    messages-to-display: 5
+  owner:
+    username: ownr1
+    password: $2a$10$UZBULM3B5qA2bIljHJULoOUMooxtmzwvbF4nraPURkA/DTtnTEKe2
+    # raw text password: pa$$Word2
+  manager:
+    username: mgr1
+    password: $2a$10$Cs7ndaORjL.WIAWa/NmZ8.SSk5OFYKrZNAf8Yla/uZHqceQJYT7MO
+    # raw text password: pa$$Word1

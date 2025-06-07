@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<springProfile name="default">
+		<appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+				<includeCallerData>true</includeCallerData>
+			</encoder>
+		</appender>
+		<root level="DEBUG">
+			<appender-ref ref="jsonConsoleAppender" />
+		</root>
+	</springProfile>
+	<springProfile name="dev">
+		<appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+				<includeCallerData>true</includeCallerData>
+			</encoder>
+		</appender>
+		<root level="DEBUG">
+			<appender-ref ref="jsonConsoleAppender" />
+		</root>
+	</springProfile>
+</configuration>

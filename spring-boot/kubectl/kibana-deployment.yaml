@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - image: docker-snapshot.cbp.dhs.gov/cbp/taspd/analytics/kibana/kibana:6.8.3
+        imagePullPolicy: IfNotPresent
+        name: kibana
+        ports:
+        - containerPort: 5601
+        resources: {}
+      hostname: kibana
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: default
+spec:
+  ports:
+  - name: "5601"
+    port: 5601
+    targetPort: 5601
+  selector:
+    app: kibana

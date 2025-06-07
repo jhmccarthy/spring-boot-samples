@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    logging.appname: spring-boot
+    portainer.group: public
+  creationTimestamp: null
+  labels:
+    app: spring-boot
+  name: spring-boot
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app:  spring-boot
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app:  spring-boot
+    spec:
+      containers:
+      - args: ["/bin/bash", "-c", "java -jar springBoot.jar"]
+
+        image: com.jimmccarthy/rugby/spring-boot:${DOCKER_TAG}
+        # Set to Always to ensure latest image is pulled (k8s does not pull by default if image already exists on node)
+        imagePullPolicy: IfNotPresent
+
+        envFrom:
+        - configMapRef:
+            name: spring-boot-env-vars
+        env:
+        - name: H2_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: spring-boot-h2-password
+              key:  h2-password
+        - name: OWNER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: spring-boot-owner-password
+              key:  owner-password
+        - name: MANAGER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: spring-boot-manager-password
+              key:  manager-password
+
+        volumes: null
+
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/ping
+            port: 8090
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 6
+
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/ping
+            port: 8090
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 1
+
+        # IMPORTANT: 'app-' must be prefix for logging         
+        name: app-spring-boot
+
+        ports:
+        - containerPort: 8090
+        resources: {}
+
+      restartPolicy: Always
+
+status: {}
+
+---
+
+# This Service's type is ClusterIP. The cluster IP is not defined here, so kubernetes will pick an available IP as its cluster IP.
+# That IP will be tied to the application's dns name which is "spring-boot.default.svc.cluster.local" currently.
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spring-boot
+  annotations:
+    cspd.logging.appname: spring-boot
+    cspd.portainer.group: public
+  name: spring-boot
+  namespace: default
+spec:
+  ports:
+    - port: 8090
+      protocol: TCP
+      targetPort: 8090
+      nodePort: 30000
+  type: NodePort
+  selector:
+    app: spring-boot
+
+status:
+  loadBalancer: {}

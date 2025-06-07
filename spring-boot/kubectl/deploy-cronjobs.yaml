@@ -1,0 +1,39 @@
+#
+# ACE AppMonitor - Cron Job(s)
+#
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: spring-boot-check-news
+  namespace: default
+spec:
+  # CRON Job runs every 3 minutes and sends a curl command to the application to get the RSS news feed
+  schedule: "*/3 * * * *"
+  successfulJobsHistoryLimit: 1 # k8s defaults this to 3, we want 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      # ttlSecondsAfterFinished allows k8s to clean up finished jobs automatically whether they are complete or failed.
+      # keeping finished jobs around in system puts pressure on the k8s API server.
+      ttlSecondsAfterFinished: 900
+
+      template:
+        spec:
+          containers:
+          - args:
+            - sh
+            - -c
+            - |
+              apk --no-cache add curl
+              curl http://spring-boot:8090/api/v1/rugby/news
+            name: spring-boot-check-news
+
+            image: alpine
+            # Set to Always to ensure latest image is pulled (k8s does not pull by default if image already exists on node)
+            imagePullPolicy: IfNotPresent       
+
+            resources: {}
+
+          # set restartPolicy to Never to avoid restarting failed jobs -- just wait till next run per schedule
+          restartPolicy: Never
+          volumes: null

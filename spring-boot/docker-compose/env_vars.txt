@@ -1,0 +1,25 @@
+JAVA_OPTS=-Xms512m -Xmx1024m
+SPRING_PROFILES_ACTIVE=dev
+
+JPA_SHOW_SQL=false
+
+# H2 DB configuration
+H2_URL=jdbc:h2:mem:testdb;MODE=PostgreSQL
+H2_USERNAME=sa
+H2_PASSWORD=password
+H2_DRIVER=org.h2.Driver
+
+#RSS URL
+RSS_URL=https://www.rnz.co.nz/rss/sport.xml
+
+# Owner credentials
+OWNER_USERNAME=ownr1
+OWNER_PASSWORD=$2a$10$UZBULM3B5qA2bIljHJULoOUMooxtmzwvbF4nraPURkA/DTtnTEKe2
+
+# Manager credentials
+MANAGER_USERNAME=mgr1
+MANAGER_PASSWORD=$2a$10$Cs7ndaORjL.WIAWa/NmZ8.SSk5OFYKrZNAf8Yla/uZHqceQJYT7MO
+
+# Logging levels
+APP_LOG_LEVEL=INFO
+SPRING_LOG_LEVEL=INFO

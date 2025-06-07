@@ -1,0 +1,48 @@
+# docker-compose for CSPD AppMon application service [LOCAL]
+version: '3.7'
+
+services:
+  svc-spring-boot:
+    container_name: svc-spring-boot
+    # TAG "latest" is only for running locally
+    image: com.jimmccarthy/rugby/spring-boot:latest
+    env_file: env_vars.txt
+
+#    volumes:
+#      - C:\data:/data:rw
+
+    # Only for local configuration - will not expose ports in higher envs
+    ports:
+      - "30000:8090"
+
+    command: java -jar springBoot.jar 
+
+#    deploy:
+#      replicas: 1
+#      restart_policy:
+#        condition: any
+#        delay:  15s
+#        window: 30s
+#      resources:
+#        limits:
+#          cpus: '2.00'
+#          memory: 4096M
+#        reservations:
+#          memory: 2048M
+
+    healthcheck:
+      test: curl --fail -s http://localhost:8090/actuator/health/ping || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 6
+      start_period: 30s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "2"
+
+    restart: unless-stopped
+
+#volumes: {}

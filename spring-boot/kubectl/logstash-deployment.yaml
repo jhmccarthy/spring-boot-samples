@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  strategy: {}
+  template:
+    metadata:
+        labels:
+          app: logstash
+    spec:
+      containers:
+      - image: docker-snapshot.cbp.dhs.gov/cbp/taspd/analytics/logstash/logstash:latest
+        imagePullPolicy: IfNotPresent
+        name: logstash
+        ports:
+        - containerPort: 9600
+        - containerPort: 12201
+          protocol: UDP
+        resources: {}
+      hostname: logstash
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: logstash
+  namespace: default
+spec:
+  ports:
+  - name: "9600"
+    port: 9600
+    targetPort: 9600
+  - name: "12201"
+    port: 12201
+    protocol: UDP
+    targetPort: 12201
+  selector:
+    io.kompose.service: logstash
+status:
+  loadBalancer: {}
